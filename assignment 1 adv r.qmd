@@ -1,0 +1,169 @@
+---
+title: "ASSIGNMENT 1"
+author: " MERRIN SANCIA SAHAYA ARMSTRONG"
+format: pdf
+editor: visual
+---
+
+## DATA
+
+```{r}
+library(data.table)
+```
+
+```{r}
+#Readoing the csv using data.table function to read data
+df1 = fread("indicators_irl.csv", skip = 1)
+df2 = fread("indicators_che.csv", skip = 1)
+df3 = fread("indicators_ind.csv", skip = 1)
+```
+
+```{r}
+#coverting the dataframe to data.table
+df1f <- as.data.table(df1)
+df2f <- as.data.table(df2)
+df3f <- as.data.table(df3)
+head(df1f)
+
+```
+
+```{r}
+#setting reable and usuable attribute names
+setnames(df1f, old = names(df1f), new = c("Country", "CountryCode", "Year", "Indicator", "IndicatorCode", "Value"))
+setnames(df2f, old = names(df2f), new = c("Country", "CountryCode", "Year", "Indicator", "IndicatorCode", "Value"))
+setnames(df3f, old = names(df3f), new = c("Country", "CountryCode", "Year", "Indicator", "IndicatorCode", "Value"))
+```
+
+```{r}
+#top 5 enteries of each data.table
+head(df1f)
+head(df2f)
+head(df3f)
+```
+
+```{r}
+#Assigning correct class to data.table 1
+
+df1f[, `:=` (
+  Country = as.factor(Country),
+  CountryCode = as.factor(CountryCode),
+  Year = as.integer(Year),
+  Indicator = as.factor(Indicator),
+  IndicatorCode = as.factor(IndicatorCode),
+  Value = as.numeric(Value)
+)]
+
+```
+
+```{r}
+#Assigning correct class to data.table 2
+df2f[, `:=` (
+  Country = as.factor(Country),
+  CountryCode = as.factor(CountryCode),
+  Year = as.integer(Year),
+  Indicator = as.factor(Indicator),
+  IndicatorCode = as.factor(IndicatorCode),
+  Value = as.numeric(Value)
+)]
+```
+
+```{r}
+#Assigning correct class to data.table 3
+df3f[, `:=` (
+  Country = as.factor(Country),
+  CountryCode = as.factor(CountryCode),
+  Year = as.integer(Year),
+  Indicator = as.factor(Indicator),
+  IndicatorCode = as.factor(IndicatorCode),
+  Value = as.numeric(Value)
+)]
+```
+
+## Merging the data.table.
+
+```{r}
+#Mering all 3 data.table to one sinfle data.table
+data_final = rbind(df1f, df2f, df3f)
+head(data_final)
+```
+
+## DATA EXPLORATION
+
+```{r}
+head(data_final,10)
+tail(data_final, 10)
+
+```
+
+```{r}
+#structure of the data.table
+str(data_final)
+
+```
+
+```{r}
+summary(data_final)
+
+```
+
+```{r}
+dim(data_final)       # returns c(rows, columns)
+nrow(data_final)      # number of rows
+ncol(data_final)      # number of columns
+
+```
+
+```{r}
+sapply(data_final, class)
+
+```
+
+```{r}
+sum(is.na(data_final))           # total missing values
+colSums(is.na(data_final))       # missing values per column
+
+```
+
+## DATA ANALYSIS USING DATA.TABLE
+
+```{r}
+#enteries that has value higher than 200
+data_final[Value > 200]
+
+```
+
+```{r}
+# Summary statistics by keyby
+data_final[, .(
+  Mean = mean(Value),
+  SD = sd(Value),
+  Max = max(Value),
+  Min = min(Value)
+), keyby = Country]
+```
+
+```{r}
+# Average indicator value annually by country
+ann_avg <- data_final[
+  , .(mean_Value = mean(Value, na.rm = TRUE)), 
+  keyby = .(`Country`, Year)
+]
+print(ann_avg)
+```
+
+## PLOTS
+
+```{r}
+library(ggplot2)
+
+```
+
+```{r}
+geom_line(size = 1.2)
+geom_line(linewidth = 1.2)
+ggplot(ann_avg, aes(x = Year, y = mean_Value, color = `Country`)) +
+  geom_line(linewidth = 1.2) +
+  labs(title = "Average Indicator Value Over Time", y = "Average Value") +
+  theme_minimal()
+
+```
