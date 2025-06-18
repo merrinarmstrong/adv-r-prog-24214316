@@ -1,6 +1,6 @@
 ---
 title: "ASSIGNMENT 1"
-author: " MERRIN SANCIA SAHAYA ARMSTRONG"
+author: "MERRIN SANCIA SAHAYA ARMSTRONG"
 format: pdf
 editor: visual
 ---
