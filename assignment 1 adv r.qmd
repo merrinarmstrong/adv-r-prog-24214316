@@ -36,9 +36,9 @@ setnames(df3f, old = names(df3f), new = c("Country", "CountryCode", "Year", "Ind
 
 ```{r}
 #top 5 enteries of each data.table
-head(df1f)
-head(df2f)
-head(df3f)
+head(df1f,10)
+head(df2f,10)
+head(df3f,10)
 ```
 
 ```{r}
